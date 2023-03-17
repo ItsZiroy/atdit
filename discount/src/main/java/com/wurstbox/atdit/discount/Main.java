@@ -3,9 +3,9 @@ package com.wurstbox.atdit.discount;
 import java.sql.*;
 
 public class Main {
-  private static final String url = "jdbc:mariadb://localhost:3306/atdit";
-  private static final String user = "atdit_user";
-  private static final String password = "LaXI8i3abe1aluYoRAC3nAhIyiJ6hi";
+  private static final String url = "jdbc:postgresql://localhost:5432/atit2";
+  private static final String user = "atit2";
+  private static final String password = "atit2";
 
   public double computeDiscount( double base, int customer ) {
     Connection c = null;
@@ -39,7 +39,9 @@ public class Main {
       s.close();
       c.close();
     }
-    catch( Exception sql ) { }
+    catch( Exception sql ) {
+      sql.printStackTrace();
+    }
 
     return result;
   }
