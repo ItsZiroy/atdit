@@ -1,13 +1,13 @@
 package com.wurstbox.atdit.discount;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 public class DiscountComputerImplementation implements DiscountComputer {
-  private static final String url = "jdbc:postgresql://localhost:5432/atit2";
-  private static final String user = "atit2";
-  private static final String password = "atit2";
 
 /*  public double computeDiscount( double base, int customer ) {
     Connection c = null;
@@ -48,62 +48,79 @@ public class DiscountComputerImplementation implements DiscountComputer {
     return result;
   }*/
 
-  public static void main( String[] args ) {
-    DiscountComputerImplementation m = new DiscountComputerImplementation();
-    System.out.println( m.compute( 250, 2 ) );
-  }
-
-  @Override
-  public List<Discount> compute(double base, int customer_id) {
-    List<Discount> result = new ArrayList<>();
-
-
-    Connection c;
-    PreparedStatement s;
-    ResultSet r;
-
-    try {
-      c = DriverManager.getConnection( url, user, password );
-
-      s = c.prepareStatement(
-              """
-                SELECT d.discount_id, d.discount, d.discount_text
-                  FROM discount AS d
-                    INNER JOIN customer_discount cd ON d.discount_id = cd.discount_id
-                  WHERE customer_id = ?
-              """ );
-      s.setInt( 1, customer_id );
-      r = s.executeQuery();
-
-      while( r.next() ) {
-        double discountPercentage = r.getDouble(2);
-        String discountText = r.getString(3);
-        double discountValue = base * discountPercentage / 100;
-
-        Discount discount = new Discount(discountText, discountPercentage, discountValue);
-
-        result.add(discount);
-      }
-
-      Discount aggregate = new Discount("Aggregate", 0, 0);
-
-      for (Discount discount : result) {
-        aggregate = new Discount(aggregate.description(), aggregate.percentage() + discount.percentage(), aggregate.amount() + discount.amount());
-      }
-
-      result.add(0, aggregate);
-
-      r.close();
-      s.close();
-      c.close();
-
-      return result;
+    public static void main(String[] args) {
+        DiscountComputerImplementation m = new DiscountComputerImplementation();
+        System.out.println(m.compute(250, 2));
     }
 
-    catch( Exception sql ) {
-      sql.printStackTrace();
+    @Override
+    public List<Discount> compute(double base, int customer_id) {
+
+        List<DiscountDB> rawData = getDiscountFromDB(customer_id);
+
+        for (DiscountDB data : )
+
+        List<Discount> result = new ArrayList<>();
+
+
+        return result;
     }
 
-    return null;
-  }
+
+    public List<DiscountDB> getDiscountFromDB(int customer_id) {
+        Properties dbAccessProperties = getAccessProperties();
+
+        List<DiscountDB> result = new ArrayList<>();
+
+        String url = dbAccessProperties.getProperty("url");
+        String user = dbAccessProperties.getProperty("user");
+        String password = dbAccessProperties.getProperty("password");
+
+        String sql = """
+                  SELECT d.discount_id, d.discount, d.discount_text
+                    FROM discount AS d
+                      INNER JOIN customer_discount cd ON d.discount_id = cd.discount_id
+                    WHERE customer_id = ?
+                """;
+
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            PreparedStatement statement = getPreparedStatement(connection, sql);
+            statement.setInt(1, customer_id);
+            ResultSet dbQueryResult = statement.getResultSet();
+            convertResultSet(result, dbQueryResult);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return result;
+    }
+
+    private static void convertResultSet(List<DiscountDB> result, ResultSet dbQueryResult) throws SQLException {
+        while (dbQueryResult.next()) {
+            int discountId = dbQueryResult.getInt("discount_id");
+            double discount = dbQueryResult.getDouble("discount");
+            String discountText = dbQueryResult.getString("discount_text");
+
+            DiscountDB resultLine = new DiscountDB(discountId, discount, discountText);
+            result.add(resultLine);
+
+        }
+    }
+
+    private Properties getAccessProperties() {
+        Properties dbAccessProperties;
+        
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("db.properties")) {
+            dbAccessProperties = new Properties();
+            dbAccessProperties.load(inputStream);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return dbAccessProperties;
+    }
+
+
+    private static PreparedStatement getPreparedStatement(Connection connection, String sql) throws SQLException {
+        return connection.prepareStatement(sql);
+    }
 }
