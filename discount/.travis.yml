@@ -1,0 +1,11 @@
+language: java
+jdk: openjdk19
+
+
+jobs:
+  include:
+      - stage: setup
+        script:
+          - jdk_switcher use openjdk19
+      - stage: test
+        script: ./deploy

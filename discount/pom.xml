@@ -18,12 +18,13 @@
   </properties>
   
   <dependencies>
-    <!-- Database connector for MariaDB-->
+    <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
     <dependency>
-      <groupId>org.mariadb.jdbc</groupId>
-      <artifactId>mariadb-java-client</artifactId>
-      <version>3.0.6</version>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>42.5.4</version>
     </dependency>
+
     <!-- JUnit 5 for unit tests-->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
