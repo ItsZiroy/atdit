@@ -1,10 +1,9 @@
 language: java
 jdk: openjdk19
 
+script: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 jobs:
   include:
-    - stage: "Setup"
-      script: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
     - stage: "Tests"                # naming the Tests stage
       name: "Unit Tests"            # names the first Tests stage job
       script: mvn test -B
