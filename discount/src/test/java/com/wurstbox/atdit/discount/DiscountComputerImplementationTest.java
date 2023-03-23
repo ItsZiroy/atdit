@@ -19,7 +19,7 @@ public class DiscountComputerImplementationTest {
    </ol>
    */
   @Test
-  void noDiscount() {
+  public void noDiscount() {
     //assemble
     DiscountDataService serviceMock = Mockito.mock( DiscountDataService.class );
     Mockito.when( serviceMock.getDiscountData( 0 ) )
@@ -48,7 +48,7 @@ public class DiscountComputerImplementationTest {
    </ol>
    */
   @Test
-  void singleDiscount() {
+  public void singleDiscount() {
     //assemble
     ArrayList<DiscountDB> mockDBQueryResult = new ArrayList<>();
     mockDBQueryResult.add( new DiscountDB( 1, 19, "geschenkte Mehrwertsteuer" ) );
@@ -82,7 +82,7 @@ public class DiscountComputerImplementationTest {
    </ol>
    */
   @Test
-  void multipleDiscounts() {
+  public void multipleDiscounts() {
     //assemble
     ArrayList<DiscountDB> mockDBQueryResult = new ArrayList<>();
     mockDBQueryResult.add( new DiscountDB( 1, 5, "Semesterstart" ) );
