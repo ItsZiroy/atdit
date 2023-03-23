@@ -79,16 +79,17 @@ public class DatabaseDiscountDataService implements DiscountDataService {
   }
 
   private PreparedStatement prepareStatement( Connection connection, int customer ) throws SQLException {
-    PreparedStatement result = connection.prepareStatement(
+    try (PreparedStatement result = connection.prepareStatement(
         """
         SELECT d.discount_id, d.discount, d.discount_text
           FROM discount AS d
             INNER JOIN customer_discount cd ON d.discount_id = cd.discount_id
           WHERE customer_id = ?
         """
-    );
-    result.setInt( 1, customer );
-    return result;
+    )) {
+      result.setInt(1, customer);
+      return result;
+    }
   }
 
   private Connection getConnection( String url, String user, String password ) throws SQLException {
