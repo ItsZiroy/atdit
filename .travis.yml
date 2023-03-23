@@ -8,4 +8,4 @@ jobs:
       name: "Unit Tests"            # names the first Tests stage job
       script: mvn test -B
     - stage: "Sonar Scan"
-      script: mvn clean verify sonar:sonar -Dsonar.projectKey=ItsZiroy_atdit_AYcN0JYVbdEi-JPYTots -Dsonar.host.url=https://sonar.teckdigital.de -Dsonar.login=sqp_d9c94ab7c9df1fe17f59497b61910c9b214ab77b
+      script: mvn clean verify sonar:sonar -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_LOGIN
