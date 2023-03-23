@@ -94,7 +94,7 @@
         <version>0.8.8</version>
         <executions>
           <execution>
-            <id>default-prepare-agent</id>
+            <id>prepare-agent</id>
             <goals>
               <goal>prepare-agent</goal>
             </goals>
