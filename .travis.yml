@@ -1,7 +1,7 @@
 language: java
 jdk: openjdk19
 
-script: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+script: mvn install -Ddependency-check.skip=true -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 jobs:
   include:
     - stage: "Tests"                # naming the Tests stage
