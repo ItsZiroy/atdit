@@ -7,7 +7,7 @@
               disableAnsi="false"/>
     </Console>
   </Appenders>
-  
+
   <Loggers>
     <Root level="debug">
       <AppenderRef ref="Console"/>
