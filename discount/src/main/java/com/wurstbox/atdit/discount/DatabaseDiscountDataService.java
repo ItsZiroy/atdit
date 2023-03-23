@@ -13,10 +13,6 @@ import java.util.Properties;
 
 public class DatabaseDiscountDataService implements DiscountDataService {
   private static final Logger log = LoggerFactory.getLogger( MethodHandles.lookup().lookupClass() );
-  public static final String URL = "url";
-  public static final String USER = "user";
-  public static final String PASSWORD = "password";
-
   @Override
   public List<DiscountDB> getDiscountData( int customer ) {
     List<DiscountDB> result = new ArrayList<>();
@@ -60,11 +56,11 @@ public class DatabaseDiscountDataService implements DiscountDataService {
   private void logMissingParameters( String url, String user, String password ) {
     String msg = "database access property not maintained: {}";
     if( url == null )
-      log.error( msg, URL );
+      log.error( msg, "url" );
     if( user == null )
-      log.error( msg, USER );
+      log.error( msg, "user" );
     if( password == null )
-      log.error( msg, PASSWORD );
+      log.error( msg, "password" );
   }
 
   private void fillResultList( List<DiscountDB> result, ResultSet dbQueryResult ) throws SQLException {
